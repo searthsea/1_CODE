@@ -16,7 +16,7 @@ some 1000 feet above Twin Creek Valley
 to an elevation of more than 7500 feet
 above sea level. The butte is located just
 north of US 30N and the Union Pacific Railroad,
-which traverse the valley. """,
+which traverse the valley.""",
     """At the base of Fossil Butte are the bright
 red, purple, yellow and gray beds of the Wasatch
 Formation. Eroded portions of these horizontal
@@ -34,9 +34,6 @@ represent several varieties of perch, as well as
 other freshwater genera and herring similar to those
 in modern oceans. Other fish such as paddlefish,
 garpike and stingray are also present.""",
-    """
-    Josette Patricia Simon OBE (born January 1st 1960) is a British actress. She trained at the Central School of Speech and Drama in London and played the part of Dayna Mellanby in the third and fourth series of the television sci-fi series Blake's 7 from 1980 to 1981. First performing as a 14-year-old, in the choir for the world premiere of the finalized Joseph and the Amazing Technicolor Dreamcoat, she has continued a career in stage productions, appearing in 50 Royal Shakespeare Company (RSC) productions, from the single press night performance as a featured character in Salvation Now at the Warehouse theatre in 1982, through to playing Cleopatra in a six-month run of Antony and Cleopatra at the Royal Shakespeare Theatre in 2017. The first black woman in an RSC play when she appeared in Salvation Now, Simon has been at the forefront of colour-blind casting, playing roles traditionally taken by white actors, including Maggie, a character who is thought to be based on Marilyn Monroe, in Arthur Miller's After the Fall at the Royal National Theatre in 1990.
-    """,
 ]
 user_data = {
     "bob": "123",
@@ -50,7 +47,7 @@ password = input("Enter your password:")
 
 if username in user_data.keys() and password == user_data[username]:
     print(
-        f"Hello {username}, welcome to the Text Analyzer. Select one of the texts for analysis."
+        f"Hello {username.title()}, welcome to the Text Analyzer. Select one of the texts for analysis."
     )
     selected_text = input(f"Type in a whole number between 1 and {len(texts)}: ")
     if not selected_text.isnumeric():
@@ -62,40 +59,93 @@ if username in user_data.keys() and password == user_data[username]:
         words_separated = analyzed.split()
         word_list_clean = []
         for word in words_separated:
-            word_strip = word.strip(".,;!?")
+            word_strip = word.strip(".,:;!?()")
             word_list_clean.append(word_strip)
 
         # STATS ENGINE:
-        word_count = len(word_list_clean)
+
         title_counter = 0
         upper_counter = 0
         lower_counter = 0
         numeric_counter = 0
         num_sum_counter = 0
         title_list = []
+        upper_list = []
+        lower_list = []
+        numeric_list = []
+        other_list = []
+        number_0_9 = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+        alphabet_eng_capital = [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H",
+            "I",
+            "J",
+            "K",
+            "L",
+            "M",
+            "N",
+            "O",
+            "P",
+            "Q",
+            "R",
+            "S",
+            "T",
+            "U",
+            "V",
+            "W",
+            "X",
+            "Y",
+            "Z",
+        ]
+
+        word_count = len(word_list_clean)
 
         for word in word_list_clean:
-            if word.istitle():
+            if word.istitle() and word[0] not in number_0_9:
                 title_counter += 1
                 title_list.append(word)
             else:
                 title_counter += 0
-
         for word in word_list_clean:
-            if word.isupper() and word not in title_list:
+            if word.isupper() and word[0] not in number_0_9:
                 upper_counter += 1
+                upper_list.append(word)
             else:
                 upper_counter += 0
             if word.islower():
                 lower_counter += 1
+                lower_list.append(word)
             else:
                 lower_counter += 0
             if word.isnumeric():
                 numeric_counter += 1
+                numeric_list.append(word)
                 num_sum_counter += int(word)
             else:
                 numeric_counter += 0
-        # word length
+        for word in word_list_clean:
+            if (
+                word not in title_list
+                and word not in upper_list
+                and word not in lower_list
+                and word not in numeric_list
+            ):
+                other_list.append(word)
+            else:
+                continue
+        for word in other_list:
+            if word[0] in alphabet_eng_capital:
+                title_list.append(word)
+            else:
+                continue
+
+        # Word length stats:
         maxlen = ""
         for word in word_list_clean:
             if len(word) > len(maxlen):
@@ -118,7 +168,7 @@ if username in user_data.keys() and password == user_data[username]:
         for number in word_len_list:
             word_len_dict[number] += 1
 
-        # VISUALIZATION & FINAL RESULTS
+        # VISUALIZATION & FINAL RESULTS PRINTS:
         print("\nRESULTS BELOW:")
         print("---------------------------------------------------")
         print(
@@ -146,3 +196,8 @@ else:
         \nWrong username and/or password!\nTerminating program..."
     )
     exit()
+
+# uncomment for testing purposes:
+# print(
+#     f"\nWORD LISTS:\nTitle: {title_list},\nUpper: {upper_list},\nLower: {lower_list},\nNumeric: {numeric_list}, \nSpecial cases:{other_list}"
+# )
